@@ -1,6 +1,7 @@
 using BlazingAuto.Application;
 using BlazingAuto.Infrastructure;
 using BlazingAuto.UI.Components;
+using MudBlazor.Services;
 
 namespace BlazingAuto.UI;
 
@@ -12,6 +13,7 @@ public static class Program {
         builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddInteractiveWebAssemblyComponents();
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddApplication();
+        builder.Services.AddMudServices();
         
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped(typeof(CancellationToken), serviceProvider => {
