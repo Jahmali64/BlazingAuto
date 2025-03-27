@@ -13,4 +13,8 @@
         <PackageReference Include="MudBlazor" Version="8.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\BlazingAuto.Application\BlazingAuto.Application.csproj" />
+    </ItemGroup>
+
 </Project>

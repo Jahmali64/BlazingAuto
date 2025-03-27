@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingAuto.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingAuto.Shared", "BlazingAuto.Shared\BlazingAuto.Shared.csproj", "{A1463CF1-970E-419A-975D-245E25B00EBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingAuto.Api", "BlazingAuto.Api\BlazingAuto.Api.csproj", "{65287829-EF13-49E4-94F2-1A218A59680E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{A1463CF1-970E-419A-975D-245E25B00EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1463CF1-970E-419A-975D-245E25B00EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1463CF1-970E-419A-975D-245E25B00EBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65287829-EF13-49E4-94F2-1A218A59680E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65287829-EF13-49E4-94F2-1A218A59680E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65287829-EF13-49E4-94F2-1A218A59680E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65287829-EF13-49E4-94F2-1A218A59680E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
