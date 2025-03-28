@@ -12,7 +12,7 @@ public class Program {
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddApplication();
         builder.Services.AddMudServices();
-        builder.Services.AddHttpClient();
+        builder.Services.AddApiServices(builder.Configuration);
         
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped(typeof(CancellationToken), serviceProvider => {

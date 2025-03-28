@@ -1,9 +1,8 @@
 ﻿@page "/videoGame/{Id:int?}"
 @rendermode InteractiveServer
-@using BlazingAuto.Application.Services.VideoGames
 @using BlazingAuto.Application.Services.VideoGames.Dtos
 @inject NavigationManager NavigationManager
-@inject IVideoGameService VideoGameService
+@inject VideoGameApiService VideoGameApiService
 @inject ISnackbar Snackbar
 
 <PageTitle>Video Game</PageTitle>
@@ -53,8 +52,8 @@
 
     protected override async Task OnInitializedAsync() {
         try {
-            if (!Id.HasValue) return;
-            _videoGame = await VideoGameService.GetByVideoGameIdAsync(Id.Value);
+            if (Id is not > 0) return;
+            _videoGame = await VideoGameApiService.GetByIdAsync(Id.Value);
         } catch (Exception ex) {
             Snackbar.Add(ex.Message, Severity.Error);
         } finally {
@@ -62,12 +61,12 @@
         }
     }
 
-    private async Task Save() => await ProcessFormRequest(VideoGameService.AddAsync(new CreateVideoGameDto {
+    private async Task Save() => await ProcessFormRequest(VideoGameApiService.AddAsync(new CreateVideoGameDto {
         Name = _videoGame?.Name ?? "",
         ReleaseDate = _videoGame?.ReleaseDate
     }));
 
-    private async Task Update() => await ProcessFormRequest(VideoGameService.UpdateAsync(Id ?? 0,
+    private async Task Update() => await ProcessFormRequest(VideoGameApiService.UpdateAsync(Id ?? 0,
     new UpdateVideoGameDto {
         Name = _videoGame?.Name ?? "",
         ReleaseDate = _videoGame?.ReleaseDate

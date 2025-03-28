@@ -29,6 +29,10 @@ public static class Program {
                 IHttpContextAccessor httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
                 return httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             });
+            
+            builder.Services.AddCors(options => {
+                options.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin());
+            });
 
             WebApplication app = builder.Build();
 
@@ -36,6 +40,7 @@ public static class Program {
             if (app.Environment.IsDevelopment()) {
                 app.MapOpenApi();
                 app.MapScalarApiReference();
+                app.UseCors("CorsPolicy");
             }
 
             app.UseHttpsRedirection();

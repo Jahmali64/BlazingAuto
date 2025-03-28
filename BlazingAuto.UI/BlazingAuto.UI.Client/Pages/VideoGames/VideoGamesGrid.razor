@@ -1,9 +1,8 @@
 ﻿@page "/videoGames"
 @attribute [StreamRendering]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-@using BlazingAuto.Application.Services.VideoGames
 @using BlazingAuto.Application.Services.VideoGames.Dtos
-@inject IVideoGameService VideoGameService
+@inject VideoGameApiService VideoGameApiService
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
@@ -54,7 +53,7 @@
 
     protected override async Task OnInitializedAsync() {
         try {
-            _videoGames = await VideoGameService.GetAllAsync();
+            _videoGames = await VideoGameApiService.GetAllAsync();
         } catch (Exception ex) {
             Snackbar.Add(ex.Message, Severity.Error);
         }
@@ -74,7 +73,7 @@
         if (result != true) return;
 
         try {
-            await VideoGameService.DeleteAsync(id);
+            await VideoGameApiService.DeleteAsync(id);
             _videoGames = _videoGames?.Where(vg => vg.VideoGameId != id).ToList() ?? [];
         } catch (Exception ex) {
             Snackbar.Add(ex.Message, Severity.Error);
