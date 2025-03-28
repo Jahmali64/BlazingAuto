@@ -1,0 +1,91 @@
+﻿@page "/videoGame/{Id:int?}"
+@rendermode InteractiveServer
+@using BlazingAuto.Application.Services.VideoGames
+@using BlazingAuto.Application.Services.VideoGames.Dtos
+@inject NavigationManager NavigationManager
+@inject IVideoGameService VideoGameService
+@inject ISnackbar Snackbar
+
+<PageTitle>Video Game</PageTitle>
+
+@if (_videoGame is null) {
+    <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
+} else {
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h3">Video Game</MudText>
+        </MudCardHeader>
+        <MudDivider/>
+        <MudCardContent>
+            <MudForm @ref="_mudForm">
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField Label="Name" @bind-Value="_videoGame.Name" Variant="Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudDatePicker Label="Release Date" @bind-Date="_videoGame.ReleaseDate"
+                                       Variant="Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem Class="mt-5">
+                        <MudStack Row="true">
+                            @if (Id > 0) {
+                                <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Update">Update
+                                </MudButton>
+                            } else {
+                                <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Save">Save
+                                </MudButton>
+                            }
+                            <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="NavigateToVideoGames">Cancel
+                            </MudButton>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    private VideoGameDto? _videoGame;
+    private MudForm? _mudForm;
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            if (!Id.HasValue) return;
+            _videoGame = await VideoGameService.GetByVideoGameIdAsync(Id.Value);
+        } catch (Exception ex) {
+            Snackbar.Add(ex.Message, Severity.Error);
+        } finally {
+            if (_videoGame is not { VideoGameId: > 0 }) _videoGame = new VideoGameDto();
+        }
+    }
+
+    private async Task Save() => await ProcessFormRequest(VideoGameService.AddAsync(new CreateVideoGameDto {
+        Name = _videoGame?.Name ?? "",
+        ReleaseDate = _videoGame?.ReleaseDate
+    }));
+
+    private async Task Update() => await ProcessFormRequest(VideoGameService.UpdateAsync(Id ?? 0,
+    new UpdateVideoGameDto {
+        Name = _videoGame?.Name ?? "",
+        ReleaseDate = _videoGame?.ReleaseDate
+    }));
+
+    private async Task ProcessFormRequest(Task request) {
+        if (_mudForm is null || _videoGame is null) return;
+
+        await _mudForm.Validate();
+        if (!_mudForm.IsValid) return;
+
+        try {
+            await request;
+        } catch (Exception ex) {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        NavigateToVideoGames();
+    }
+
+    private void NavigateToVideoGames() => NavigationManager.NavigateTo("/videogames");
+}

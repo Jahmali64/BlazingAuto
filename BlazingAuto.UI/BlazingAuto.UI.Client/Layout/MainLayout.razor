@@ -1,14 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider />
-<MudPopoverProvider />
+<MudThemeProvider @rendermode="InteractiveAuto" />
+<MudPopoverProvider @rendermode="InteractiveAuto" />
 
 @* Needed for dialogs *@
-<MudDialogProvider />
+<MudDialogProvider @rendermode="InteractiveAuto" />
 
 @* Needed for snackbars *@
-<MudSnackbarProvider />
+<MudSnackbarProvider @rendermode="InteractiveAuto" />
 
 <div class="page">
     <div class="sidebar">

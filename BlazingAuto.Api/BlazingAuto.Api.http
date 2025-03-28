@@ -1,6 +1,6 @@
 @BlazingAuto.Api_HostAddress = http://localhost:5112
 
-GET {{BlazingAuto.Api_HostAddress}}/weatherforecast/
+GET {{BlazingAuto.Api_HostAddress}}/videogame/
 Accept: application/json
 
 ###
