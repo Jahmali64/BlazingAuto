@@ -1,0 +1,51 @@
+﻿@page "/videoGame/{Id:int?}"
+@using BlazingAuto.Application.Services.VideoGames
+@using BlazingAuto.Application.Services.VideoGames.Dtos
+@inject IVideoGameService VideoGameService
+@inject ISnackbar Snackbar
+
+@if (_videoGame is null) {
+    <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+} else {
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h3">Video Game</MudText>
+        </MudCardHeader>
+        <MudDivider />
+        <MudCardContent>
+            <MudForm>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField Text="Name" @bind-Value="_videoGame.Name" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudDatePicker Text="Release Date" @bind-Date="_videoGame.ReleaseDate" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem Class="mt-5">
+                        <MudStack Row="true">
+                            <MudButton Color="Color.Success" Variant="Variant.Filled">Save</MudButton>
+                            <MudButton Color="Color.Warning" Variant="Variant.Filled">Cancel</MudButton>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    
+    private VideoGameDto? _videoGame;
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            if (!Id.HasValue) return;
+            _videoGame = await VideoGameService.GetByVideoGameIdAsync(Id.Value);
+        } catch (Exception ex) {
+            Snackbar.Add(ex.Message, Severity.Error);
+        } finally {
+            if (_videoGame is not { VideoGameId: > 0 }) _videoGame = new VideoGameDto();
+        }
+    }
+}

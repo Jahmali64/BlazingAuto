@@ -5,7 +5,7 @@ using MudBlazor.Services;
 
 namespace BlazingAuto.UI;
 
-public static class Program {
+public class Program {
     public static void Main(string[] args) {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

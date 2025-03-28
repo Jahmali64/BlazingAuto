@@ -1,0 +1,80 @@
+﻿@page "/videoGames"
+@using BlazingAuto.Application.Services.VideoGames
+@using BlazingAuto.Application.Services.VideoGames.Dtos
+@inject IVideoGameService VideoGameService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+@if (_videoGames is null) {
+    <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+} else {
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h3">Video Games</MudText>
+        </MudCardHeader>
+        <MudDivider />
+        <MudCardContent>
+            <MudTable Items="_videoGames" Dense="true" Hover="true" Striped="true" Bordered="true">
+                <ToolBarContent>
+                    <MudStack Row="true">
+                        <MudTooltip Text="Add">
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => View()">Add</MudButton>
+                        </MudTooltip>
+                    </MudStack>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh Class="tblButtons">Id</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Release Date</MudTh>
+                    <MudTh Class="tblButtons"></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd Class="tblButtons">@context.VideoGameId</MudTd>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>@(context.ReleaseDate?.ToString("D"))</MudTd>
+                    <MudTd>
+                        <MudStack Row="true">
+                            <MudButton Color="Color.Warning" Variant="Variant.Outlined" OnClick="() =>View(context.VideoGameId)">Edit</MudButton>
+                            <MudButton Color="Color.Error" Variant="Variant.Outlined" OnClick="() => Delete(context.VideoGameId)">Delete</MudButton>
+                        </MudStack>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    private List<VideoGameDto>? _videoGames;
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            _videoGames = await VideoGameService.GetAllAsync();
+        } catch (Exception ex) {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+
+        _videoGames ??= [];
+    }
+
+    private void View(int? id = null) => NavigationManager.NavigateTo($"videoGame/{id ?? 0}");
+
+    private async Task Delete(int id) {
+        bool? result = await DialogService.ShowMessageBox(new MessageBoxOptions {
+            Title = "Delete",
+            Message = "Are you sure you want to delete this item?",
+            CancelText = "Cancel"
+        });
+        if (result != true) return;
+
+        try {
+            await VideoGameService.DeleteAsync(id);
+            _videoGames = _videoGames?.Where(vg => vg.VideoGameId != id).ToList() ?? [];
+        } catch (Exception ex) {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        
+        StateHasChanged();
+    }
+}
