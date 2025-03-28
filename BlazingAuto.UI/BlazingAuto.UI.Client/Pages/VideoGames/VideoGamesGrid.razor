@@ -1,5 +1,6 @@
 ﻿@page "/videoGames"
-@rendermode InteractiveAuto
+@attribute [StreamRendering]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @using BlazingAuto.Application.Services.VideoGames
 @using BlazingAuto.Application.Services.VideoGames.Dtos
 @inject IVideoGameService VideoGameService
